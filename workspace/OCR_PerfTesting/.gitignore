@@ -1,0 +1,11 @@
+*.class
+*.so
+*.png
+*.webp
+*.jpeg
+*.jpg
+*.png
+*.csv
+*.txt
+*.xls
+./bin/ocr_data
