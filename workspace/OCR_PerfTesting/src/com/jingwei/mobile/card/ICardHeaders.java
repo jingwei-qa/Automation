@@ -77,5 +77,25 @@ public interface ICardHeaders {
 //			put(15,1); // NAMECARD_OTHER
 		}
 	};
+	
+	/**
+     * The key is the fields id from OCR result, the value is the fields id from .csv file.
+     */
+	public static HashMap<Integer, Integer> HeaderFieldMapping = new HashMap<Integer, Integer>(){
+		{
+			put(NAME_EN,NAMECARD_NAME_EN); // NAMECARD_NAME_EN -> NAME_EN
+			put(NAME,NAMECARD_NAME_CN); // NAMECARD_NAME_CN -> NAME
+			put(TITLE,NAMECARD_TITLE); // NAMECARD_TITLE	 -> TITLE
+			put(PHONE_COMPANY,NAMECARD_TELPHONE); // NAMECARD_TELPHONE -> PHONE_COMPANY
+			put(PHONE_FAX, NAMECARD_FAX); // NAMECARD_FAX -> PHONE_FAX
+			put(MOBILE,NAMECARD_CELLPHONE); // NAMECARD_CELLPHONE -> MOBILE
+			put(EMAIL, NAMECARD_EMAIL); // NAMECARD_EMAIL -> EMAIL
+			put(WEBSITE, NAMECARD_WEBURL); // NAMECARD_WEBURL -> WEBSITE
+			put(IM, NAMECARD_IM); // NAMECARD_IM -> IM
+			put(ADDRESS, NAMECARD_ADDRESS); // NAMECARD_ADDRESS -> ADDRESS
+			put(COMPANY,NAMECARD_COMPANY); //  NAMECARD_COMPANY -> COMPANY
+			
+		}
+	};
 }
 

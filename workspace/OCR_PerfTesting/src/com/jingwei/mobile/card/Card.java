@@ -23,7 +23,6 @@ public class Card {
 		
 	// TODO: add compare method 
 	public int Compare(Card card2){
-				
 		return 0;
 	}
 	

@@ -49,23 +49,23 @@ public class CardBean extends Beans {
 		}
 	};
 	
-	private String card_id;
-	private String name;
-	private String name_en;
-	private String title;
-	private String title_en;
-	private String phone_company;
-	private String phone_fax;
-	private String mobile;
-	private String email;
-	private String company;
-	private String address;
-	private String im;
-	private String website;
-	private String create_time;
-	private String card_pic_url;
-	private String imgname;
-	private String folder;
+	public String card_id;
+	public String name;
+	public String name_en;
+	public String title;
+	public String title_en;
+	public String phone_company;
+	public String phone_fax;
+	public String mobile;
+	public String email;
+	public String company;
+	public String address;
+	public String im;
+	public String website;
+	public String create_time;
+	public String card_pic_url;
+	public String imgname;
+	public String folder;
 	
 	// Getter & setters for the fields.
 	
@@ -248,6 +248,8 @@ public class CardBean extends Beans {
 	 * @throws NoSuchFieldException 
 	 * 
 	 */
+	public static int NOTMATCH = 1;
+	public static int MATCHED = 0;
 	public static int matchCard(CardBean cardBean, Card card, boolean strict, int cf) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
 		// TODO: complete this method to give a result,
 		// TODO: Need to calculate the value according to the difference.
@@ -255,45 +257,64 @@ public class CardBean extends Beans {
 		
 		for(int i = 0; i < CardFactory.header.length; i++){
 			int p_csv = (int) Math.pow(2, i);
-			if( (p_csv ^ cf) != 0 ){
+			
+			// if the cf containts this fields, do matching.
+			if( (p_csv & cf) != 0 ){
 				
-				// if strict is true, the card should only have one fields name header[i]
-				if(strict){
-					
-					// TODO: get the fields' index in ocr from ICardHeaders.FieldHeaderMapping
-					int p_ocr= 0;
-					int filedCount = 0;
-					boolean matched = false;
-					for(int index = 0; index < card.attrs.length ; index++){
-						if(card.attrs[index] == p_ocr){
-							filedCount++ ;
-						}
-						
-						if(card.values[index] == cardBean.getField(CardFactory.header[i])){
-							matched = true;
-						}
-					}
-					
-					diffs = Math.abs(filedCount - 1);
-					if(matched){
-						diffs--;
-					}
-					
-				}
-				else // if strict is false, need to verify if ocr result contains the right field.
+				// some of the fields in the ocr result, does not stored in the csv file. 
+				// Ignore those fields for now. 
+				if(ICardHeaders.HeaderFieldMapping.containsKey(p_csv))
 				{
 					
+					int count = 0;
+					boolean fieldMatched = false;
+					String fieldStr = CardFactory.header[i];
+					int fieldInOCR = ICardHeaders.HeaderFieldMapping.get(p_csv);
+					
+					// find all the fields, which attribute value equals to fieldInOCR.
+					// record the count, and if any of the matched values equal to the expected value.
+					String expectedValue = String.valueOf(cardBean.getField(fieldStr));
+					for(int k=0; k<card.attrs.length ; k++){
+						if(fieldInOCR == card.attrs[k]){
+							count++;
+						}
+						
+						String actualValue = card.values[k];
+						
+						if(expectedValue == actualValue){
+							fieldMatched = true;
+						}
+						else{
+							// other steps will check the count & matched or not, so do nothing here.
+							//diffs++;
+						}
+					}
+					
+					// if strict is true, the card should only have one fields name header[i], or add the diffnumber.
+					if(strict & count < 1){
+						// diffs += Math.abs(count - 1);
+						diffs++;
+						System.out.println(String.format("Filed: %s, has 0 result in OCR result.", fieldStr));
+					}
+					else if (strict & count > 1){
+						diffs++;
+						System.out.println(String.format("Filed: %s, has 0 result in OCR result.", fieldStr));
+					}
+					// if not matched, and the card has the value of the attribute, diffs++;
+					if(!fieldMatched & count > 0){
+						// if matched, --
+						diffs++;
+						System.out.println(String.format("Filed: %s, does not match expected value in OCR result.", fieldStr));
+					}
+					
 				}
-				
-				String field = CardFactory.header[i];
-				
-				
+				else{
+					// if not contain this field, return 1 for 
+				}
 			}
-			
-			return diffs;
 		}
 		
-		return 0;
+		return diffs;
 	}
 	
 	public Object getField(String field) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
