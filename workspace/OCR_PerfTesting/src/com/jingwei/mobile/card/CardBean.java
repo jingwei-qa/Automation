@@ -12,6 +12,8 @@ import java.util.HashMap;
 import org.supercsv.io.CsvBeanReader;
 import org.supercsv.prefs.CsvPreference;
 
+import com.jingwei.mobile.log.Log;
+
 /**
  * 
  * @author nan.lin3@renren-inc.com
@@ -63,7 +65,10 @@ public class CardBean extends Beans {
 	public String im;
 	public String website;
 	public String create_time;
+	
+	// this field is not correct.
 	public String card_pic_url;
+	
 	public String imgname;
 	public String folder;
 	
@@ -277,34 +282,38 @@ public class CardBean extends Beans {
 					for(int k=0; k<card.attrs.length ; k++){
 						if(fieldInOCR == card.attrs[k]){
 							count++;
+						}else{
+							continue;
 						}
 						
-						String actualValue = card.values[k];
+						String actualValue = card.values[k].replace(" ", "");
 						
-						if(expectedValue == actualValue){
+						if(expectedValue.equals(actualValue)){
 							fieldMatched = true;
 						}
 						else{
 							// other steps will check the count & matched or not, so do nothing here.
 							//diffs++;
 						}
+						
+						Log.Log(String.format("Expected: %s\n Actual: %s", expectedValue, actualValue));
 					}
 					
 					// if strict is true, the card should only have one fields name header[i], or add the diffnumber.
 					if(strict & count < 1){
 						// diffs += Math.abs(count - 1);
 						diffs++;
-						System.out.println(String.format("Filed: %s, has 0 result in OCR result.", fieldStr));
+						Log.Log(String.format("Filed: %s, has 0 result in OCR result.", fieldStr));
 					}
 					else if (strict & count > 1){
 						diffs++;
-						System.out.println(String.format("Filed: %s, has 0 result in OCR result.", fieldStr));
+						Log.Log(String.format("Filed: %s, has 1+ result in OCR result.", fieldStr));
 					}
 					// if not matched, and the card has the value of the attribute, diffs++;
 					if(!fieldMatched & count > 0){
 						// if matched, --
 						diffs++;
-						System.out.println(String.format("Filed: %s, does not match expected value in OCR result.", fieldStr));
+						Log.Log(String.format("Filed: %s, does not match expected value in OCR result.", fieldStr));
 					}
 					
 				}

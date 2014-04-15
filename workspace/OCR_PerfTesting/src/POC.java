@@ -9,7 +9,23 @@ import com.jingwei.mobile.card.*;
 
 public class POC {
 	
-	public static void main(String[] args) throws Exception{ 
+	public static void main(String[] args) throws Exception{
+		
+		String a = "aa";
+		String b ="aa";
+		System.out.println(a == b);
+		
+		String csvFile = "ocr_info_utf8_10.csv";
+		String rootPath = "/mnt/picset";
+		String configFilePath = "ocr_data/";
+		boolean strict = false;
+
+		//int fields = ICardFields.NAME | ICardFields.MOBILE; // can add more | to match more fields
+		int fields = ICardFields.NAME;
+
+		TestRun tr = new TestRun(csvFile, rootPath, configFilePath, strict, fields);
+		
+		tr.start();
 		
 		String[] values = {"linnan", "15210282499"};
 		int[] attrs = {ICardHeaders.NAMECARD_NAME_CN, ICardHeaders.NAMECARD_CELLPHONE};
