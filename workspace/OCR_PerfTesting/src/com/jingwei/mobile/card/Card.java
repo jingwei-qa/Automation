@@ -1,5 +1,7 @@
 package com.jingwei.mobile.card;
 
+import com.jingwei.mobile.log.Log;
+
 public class Card {
 	
 	int count;
@@ -39,7 +41,7 @@ public class Card {
 	public void Print(){
 		for(int i=0; i<this.count; i++)
 		{
-			System.out.println("attr["+i+"] = "+this.attrs[i]+"\t"+this.values[i]);
+			Log.Log("attr["+i+"] = "+this.attrs[i]+"\t"+this.values[i]);
 		}
 		
 	}

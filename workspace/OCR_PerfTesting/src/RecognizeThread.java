@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.jingwei.mobile.card.Card;
 import com.jingwei.mobile.card.CardFactory;
+import com.jingwei.mobile.log.Log;
 
 public class RecognizeThread extends Thread{
 		
@@ -36,7 +37,7 @@ public class RecognizeThread extends Thread{
 		
 		public void run(){
 			File picset = new File(picsetRoot);
-			System.out.println("picsetRoot: " + picsetRoot);
+			Log.Log("picsetRoot: " + picsetRoot);
 			String[] files = picset.list(
 				// Use anonymous class as a filter to get jpg, jpeg and webp files
 				new FilenameFilter(){
@@ -55,7 +56,7 @@ public class RecognizeThread extends Thread{
 					int index = i % totalCount;
 
 					String filePath = picsetRoot + "/" + files[index];
-					System.out.println("Reading: " + filePath);
+					Log.Log("Reading: " + filePath);
 					try {
 						RecogonizeImageCard(filePath);
 					} catch (Exception e) {

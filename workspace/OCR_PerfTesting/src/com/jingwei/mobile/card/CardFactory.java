@@ -98,7 +98,7 @@ public class CardFactory implements java.io.Closeable {
 		byte [] cbuf = new byte [(int)fis.length()];
 		int clen = fis.read(cbuf);
 		
-//		System.out.println("rlen = " + clen);
+//		Log.Log("rlen = " + clen);
 		Boolean loadSuccess = false;
 		if(iswebp){
 			loadSuccess = ocr.ocr_readWebpBuffer(clen, cbuf);
