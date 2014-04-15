@@ -13,6 +13,7 @@ import org.supercsv.prefs.CsvPreference;
 import com.jingwei.mobile.card.Card;
 import com.jingwei.mobile.card.CardBean;
 import com.jingwei.mobile.card.CardFactory;
+import com.jingwei.mobile.log.Log;
 
 
 public class TestRun extends Thread{
@@ -57,7 +58,7 @@ public class TestRun extends Thread{
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			// TODO Log the failure
-			System.out.println("Initial Card Factory failed");
+			Log.Log("Initial Card Factory failed");
 			e.printStackTrace();
 		}
 		
@@ -94,9 +95,9 @@ public class TestRun extends Thread{
 					
 					// TODO: Log the details, use out.println for now
 					if(diffEach != 0){
-						System.out.println(String.format("Failed! Card [%s] does not match the OCR result of [%s]", cb.getCard_id(), cardImgFilePath));
+						Log.Log(String.format("Failed! Card [%s] does not match the OCR result of [%s]", cb.getCard_id(), cardImgFilePath));
 					}else{
-						System.out.println(String.format("successfully! Card [%s] match the OCR result of [%s] ", cb.getCard_id(), cardImgFilePath));
+						Log.Log(String.format("successfully! Card [%s] match the OCR result of [%s] ", cb.getCard_id(), cardImgFilePath));
 					}
 				}
 				
