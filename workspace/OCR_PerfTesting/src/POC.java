@@ -11,40 +11,36 @@ public class POC {
 	
 	public static void main(String[] args) throws Exception{
 		
-		String a = "aa";
-		String b ="aa";
-		System.out.println(a == b);
-		
-		String csvFile = "ocr_info_utf8_10.csv";
+		String csvFile = "card_tb.csv";
 		String rootPath = "/mnt/picset";
 		String configFilePath = "ocr_data/";
 		boolean strict = false;
 
 		//int fields = ICardFields.NAME | ICardFields.MOBILE; // can add more | to match more fields
-		int fields = ICardFields.NAME;
+		int fields = ICardFields.NAME | ICardFields.MOBILE;
 
-		TestRun tr = new TestRun(csvFile, rootPath, configFilePath, strict, fields);
+		TestRun tr = new TestRun(csvFile, rootPath, configFilePath, strict, fields, 100);
 		
 		tr.start();
-		
-		String[] values = {"linnan", "15210282499"};
-		int[] attrs = {ICardHeaders.NAMECARD_NAME_CN, ICardHeaders.NAMECARD_CELLPHONE};
-		
-		Card card = new Card(2, values, attrs);
-		CardBean cb = new CardBean();
-		cb.setName(values[0]+'a');
-		cb.setMobile(values[1]);
-//		int matches = CardBean.matchCard(cb, card, true, ICardFields.NAME | ICardFields.MOBILE);
-		int matches = CardBean.matchCard(cb, card, true,  ICardFields.NAME | ICardFields.MOBILE);
-		
-		System.out.println("matches: \t" + matches);
+//		
+//		String[] values = {"linnan", "15210282499"};
+//		int[] attrs = {ICardHeaders.NAMECARD_NAME_CN, ICardHeaders.NAMECARD_CELLPHONE};
+//		
+//		Card card = new Card(2, values, attrs);
+//		CardBean cb = new CardBean();
+//		cb.setName(values[0]+'a');
+//		cb.setMobile(values[1]);
+////		int matches = CardBean.matchCard(cb, card, true, ICardFields.NAME | ICardFields.MOBILE);
+//		int matches = CardBean.matchCard(cb, card, true,  ICardFields.NAME | ICardFields.MOBILE);
+//		
+//		System.out.println("matches: \t" + matches);
 		
 //		int ii = 1;
 //		int iii =2;
 //		int iiii = 4;
 //		int k = ii | iii | iiii;
-		System.out.println(" operation: " + (128));
-		System.out.println( 64 & (2 | 128));
+//		System.out.println(" operation: " + (128));
+//		System.out.println( 64 & (2 | 128));
 		
 //		if( (24 & 32) != 0){
 //			System.out.println("Failed");	

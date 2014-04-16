@@ -279,6 +279,7 @@ public class CardBean extends Beans {
 					// find all the fields, which attribute value equals to fieldInOCR.
 					// record the count, and if any of the matched values equal to the expected value.
 					String expectedValue = String.valueOf(cardBean.getField(fieldStr));
+					String actualValue = null;
 					for(int k=0; k<card.attrs.length ; k++){
 						if(fieldInOCR == card.attrs[k]){
 							count++;
@@ -286,7 +287,7 @@ public class CardBean extends Beans {
 							continue;
 						}
 						
-						String actualValue = card.values[k].replace(" ", "");
+						actualValue = card.values[k].replace(" ", "");
 						
 						if(expectedValue.equals(actualValue)){
 							fieldMatched = true;
@@ -295,30 +296,27 @@ public class CardBean extends Beans {
 							// other steps will check the count & matched or not, so do nothing here.
 							//diffs++;
 						}
-						
-						Log.Log(String.format("Expected: %s\n Actual: %s", expectedValue, actualValue));
 					}
 					
 					// if strict is true, the card should only have one fields name header[i], or add the diffnumber.
 					if(strict & count < 1){
-						// diffs += Math.abs(count - 1);
 						diffs++;
-						Log.Log(String.format("Filed: %s, has 0 result in OCR result.", fieldStr));
+						Log.Log(String.format("Field: %s, has 0 result in OCR result in STRICT mode.", fieldStr));
 					}
 					else if (strict & count > 1){
 						diffs++;
-						Log.Log(String.format("Filed: %s, has 1+ result in OCR result.", fieldStr));
+						Log.Log(String.format("Field: %s, has 1+ result in OCR result in STRICT mode.", fieldStr));
 					}
 					// if not matched, and the card has the value of the attribute, diffs++;
 					if(!fieldMatched & count > 0){
 						// if matched, --
 						diffs++;
-						Log.Log(String.format("Filed: %s, does not match expected value in OCR result.", fieldStr));
+						Log.Log(String.format("Field: %s - Expected: %s\t Actual: %s NOT MATCH.",fieldStr, expectedValue, actualValue));
 					}
 					
 				}
 				else{
-					// if not contain this field, return 1 for 
+					// if not contain this field, TODO add a process to handle this.
 				}
 			}
 		}

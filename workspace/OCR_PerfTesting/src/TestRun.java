@@ -22,6 +22,16 @@ public class TestRun extends Thread{
 	boolean strict;
 	int fields;
 	
+	int bingo = 0;
+	int amount = 0;
+	
+	int size = -1;
+	// sizep start from 1, since the do ... while will execute once before circle starts.
+	
+	public TestRun(String csvFile, String rootPath, String configFilePath, boolean strict, int fields) throws FileNotFoundException {
+		this(csvFile, rootPath, configFilePath, strict, fields, -1);
+	}
+	
 	/**
 	 * 
 	 * @param csvFile
@@ -32,15 +42,15 @@ public class TestRun extends Thread{
 	 * @throws FileNotFoundException 
 	 * @throws Exception
 	 * 
-	 * TODO: Add log method to log the details of OCR running & comparing
 	 */
-	public TestRun(String csvFile, String rootPath, String configFilePath, boolean strict, int fields) throws FileNotFoundException {
+	public TestRun(String csvFile, String rootPath, String configFilePath, boolean strict, int fields, int size) throws FileNotFoundException {
 		
 		File file = new File(rootPath);
 		if(!file.exists()){
 			throw new FileNotFoundException();
 		}
 		
+		this.size = size;
 		this.csvFile = csvFile;
 		this.rootPath = rootPath;
 		this.configFilePath = configFilePath;
@@ -56,8 +66,6 @@ public class TestRun extends Thread{
 		try {
 			cf = CardFactory.InitCardFactory(configFilePath);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			// TODO Log the failure
 			Log.Log("Initial Card Factory failed");
 			e.printStackTrace();
 		}
@@ -67,7 +75,6 @@ public class TestRun extends Thread{
 		try {
 			streamReader = new InputStreamReader(new FileInputStream(csvFile), "gb18030");
 		} catch (UnsupportedEncodingException | FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		CsvBeanReader beanReader = new CsvBeanReader(streamReader, CsvPreference.EXCEL_PREFERENCE);
@@ -86,6 +93,10 @@ public class TestRun extends Thread{
 					break;
 				}
 				
+				if(cb.getFolder() == null || cb.getImgname() == null){
+					continue;
+				}
+				
 				if(cb.getFolder() != null & !cb.getFolder().isEmpty() & cb.getImgname()!=null & !cb.getImgname().isEmpty()){
 					String cardImgFilePath = this.rootPath + java.io.File.separator +  cb.getFolder() + java.io.File.separator + cb.getImgname();
 					Card card = cf.Make(cardImgFilePath);
@@ -93,26 +104,31 @@ public class TestRun extends Thread{
 					int diffEach = CardBean.matchCard(cb, card, strict, fields);
 					diffs += diffEach;
 					
-					// TODO: Log the details, use out.println for now
 					if(diffEach != 0){
 						Log.Log(String.format("Failed! Card [%s] does not match the OCR result of [%s]", cb.getCard_id(), cardImgFilePath));
 					}else{
 						Log.Log(String.format("successfully! Card [%s] match the OCR result of [%s] ", cb.getCard_id(), cardImgFilePath));
+						bingo++;
 					}
 				}
 				
 			} catch (IOException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}finally{
+				amount++;
+				Log.Log(String.format("[%d] Bingo / [%d] All ", bingo, amount));
+				
+				if(size > 0 && amount >= size){
+					break;
+				}
 			}
+			
 		}while(cb!= null);
 			
 		// close the bean reader
 		try {
 			beanReader.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

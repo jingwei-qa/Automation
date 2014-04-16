@@ -64,6 +64,7 @@ public class Log {
 			writer = new FileWriter(logFilePath, true);
 			String cont = String.format("%s -- %s\n", new Date().toString(), str);
 			writer.write(cont);
+			System.out.println(cont);
 			
 		}catch(IOException e){
 			e.printStackTrace();
