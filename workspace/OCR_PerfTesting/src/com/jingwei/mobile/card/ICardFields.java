@@ -1,5 +1,12 @@
 package com.jingwei.mobile.card;
 
+/**
+ * Store all the fields in binary format.
+ * 
+ * 
+ * @author nan.lin3@renren-inc.com
+ * @DateModifled: Apr 17, 2014
+ */
 public interface ICardFields {
 	
 	public int CARD_ID = 1;

@@ -21,10 +21,16 @@ import com.jingwei.mobile.log.Log;
  */
 public class CardBean extends Beans {
 
+	/**
+	 * Empty initial constructor, 
+	 * added for CSV bean reader.
+	 */
 	public CardBean() {
+		// I am a card bean
 	}
 
 	// All the headers of the stored data 
+	// Use to init the CardBean instance as headers' set.
 	public static String[] header = { 
 			"card_id", 
 			"name", 
@@ -44,12 +50,6 @@ public class CardBean extends Beans {
 			"imgname", 
 			"folder" 
 			};
-	
-	public static HashMap<Integer, Integer> FieldsMapping = new HashMap<Integer, Integer>(){
-		{
-			put(1,1);
-		}
-	};
 	
 	public String card_id;
 	public String name;
@@ -236,6 +236,8 @@ public class CardBean extends Beans {
 		return sb.toString();
 	}
 	
+	public static int NOTMATCH = 1;
+	public static int MATCHED = 0;
 	/**
 	 * if strict is true, each field only can have one value, 
 	 * if the card contains more than 1 field, like card with two Address, 
@@ -253,8 +255,6 @@ public class CardBean extends Beans {
 	 * @throws NoSuchFieldException 
 	 * 
 	 */
-	public static int NOTMATCH = 1;
-	public static int MATCHED = 0;
 	public static int matchCard(CardBean cardBean, Card card, boolean strict, int cf) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
 		// TODO: complete this method to give a result,
 		// TODO: Need to calculate the value according to the difference.
@@ -294,7 +294,6 @@ public class CardBean extends Beans {
 						}
 						else{
 							// other steps will check the count & matched or not, so do nothing here.
-							//diffs++;
 						}
 					}
 					
@@ -304,10 +303,11 @@ public class CardBean extends Beans {
 						Log.Log(String.format("Field: %s, has 0 result in OCR result in STRICT mode.", fieldStr));
 					}
 					else if (strict & count > 1){
+						// if strict is true, and ocr result had multi value of the field. diffs++
 						diffs++;
 						Log.Log(String.format("Field: %s, has 1+ result in OCR result in STRICT mode.", fieldStr));
 					}
-					// if not matched, and the card has the value of the attribute, diffs++;
+					// if not matched, and the card has the value of the attribute (aka count > 0), diffs++;
 					if(!fieldMatched & count > 0){
 						// if matched, --
 						diffs++;
@@ -324,6 +324,16 @@ public class CardBean extends Beans {
 		return diffs;
 	}
 	
+	/**
+	 * Add a reflection method to read field easier.
+	 * For this method could not read the private fields, so change the modifier to PUBLIC. 
+	 * @param field - field's name
+	 * @return The field object,
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	public Object getField(String field) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
 		Class objClass = this.getClass();
 		Field targetField = objClass.getField(field);

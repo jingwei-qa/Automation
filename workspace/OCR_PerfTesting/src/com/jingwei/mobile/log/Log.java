@@ -7,6 +7,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * To log the details for logical code.
+ * Any string to log will be append a time stamp before logging.
+ * @author nan.lin3@renren-inc.com
+ * @DateModifled: Apr 17, 2014
+ */
 public class Log {
 	
 	/**
@@ -25,7 +31,8 @@ public class Log {
 				calendar.get(Calendar.SECOND));
 	}
 
-	
+
+	// IGNORE THIS METHOD
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		System.out.println(Log.defaultLog);
@@ -75,6 +82,11 @@ public class Log {
 		
 	}
 	
+	/**
+	 * Make a static method to write log in default log file name,
+	 * So it's more easier to write log in a by default file. 
+	 * @param str
+	 */
 	public static void Log(String str){
 		Log log = Log.GetInstance();
 		try {
