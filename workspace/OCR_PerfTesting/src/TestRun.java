@@ -85,7 +85,14 @@ public class TestRun extends Thread{
 		
 		CardBean cb = new CardBean();
 		int diffs = 0;
-		
+		// move 10000 lines to test new data.
+		for(int p = 0; p < 10000; p++){
+			try {
+				cb = beanReader.read(cb.getClass(), CardBean.header);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		do{
 			try {
 				cb = beanReader.read(cb.getClass(), CardBean.header);
@@ -114,7 +121,9 @@ public class TestRun extends Thread{
 					// if card is nul, means the ocr load picture failed, continue.
 					if(card == null || card.count == 0){
 						// TODO, handle this
-						issuePicLog.Log(String.format("OCR read PIC failed: [%s]", cardImgFilePath));
+						issuePicLog.Write(String.format("OCR read PIC failed: [%s]", cardImgFilePath));
+						File ff = new File(cardImgFilePath);
+						
 						continue;
 					}
 					
