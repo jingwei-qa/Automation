@@ -1,5 +1,9 @@
 package com.jingwei.mobile.util;
 
+import java.util.Date;
+
+import com.jingwei.mobile.log.Log;
+
 public class Levenshtein {
 
 	public static void main(String[] args) {
@@ -7,9 +11,12 @@ public class Levenshtein {
 
 		int diff = Compare("123", "321");
 		System.out.println(diff);
+			
 	}
 	
 	public static int Compare(String source, String target){
+		
+		
 		if(source == null && target == null){
 			return 0;
 		}
@@ -36,11 +43,11 @@ public class Levenshtein {
 		int[][] matrix = new int[slength + 1][tlength + 1];
 		
 		for(int i = 0; i <= slength; i++){
-			matrix[0][i] = i;
+			matrix[i][0] = i;
 		}
 		
 		for(int j =0; j <=tlength ; j ++){
-			matrix[j][0] = j;
+			matrix[0][j] = j;
 		}
 		
 		for(int sindex = 1; sindex <= slength; sindex++){
@@ -50,7 +57,10 @@ public class Levenshtein {
 			}
 		}
 		
-		return matrix[slength][tlength];
+		int distance = matrix[slength][tlength];
+		Log.Log(String.format("Comparing: [%s] <-> [%s] = [%d]", source, target, distance));
+		
+		return distance;
 	}
 	
 	public static int Minimium(int i, int j, int k){

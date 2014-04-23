@@ -1,10 +1,3 @@
-
-import java.io.*;
-import java.util.List;
-
-import org.supercsv.io.*;
-import org.supercsv.prefs.CsvPreference;
-
 import com.jingwei.mobile.card.*;
 
 public class POC {
@@ -15,11 +8,12 @@ public class POC {
 		String rootPath = "/mnt/picset";
 		String configFilePath = "ocr_data/";
 		boolean strict = false;
+		double matchRate = 1.0;
+		int fields = ICardFields.NAME;
 
 		//int fields = ICardFields.NAME | ICardFields.MOBILE; // can add more | to match more fields
-		int fields = ICardFields.NAME | ICardFields.MOBILE;
 
-		TestRun tr = new TestRun(csvFile, rootPath, configFilePath, strict, fields, 100);
+		TestRun tr = new TestRun(csvFile, rootPath, configFilePath, strict, fields, 10000, matchRate);
 		
 		tr.start();
 //		

@@ -69,7 +69,9 @@ public class Log {
 		
 		try{
 			writer = new FileWriter(logFilePath, true);
-			String cont = String.format("%s -- %s\n", new Date().toString(), str);
+			java.text.DateFormat format1 = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			String ss = format1.format(new Date());
+			String cont = String.format("%s - %s\n", ss, str);
 			writer.write(cont);
 			System.out.println(cont);
 			

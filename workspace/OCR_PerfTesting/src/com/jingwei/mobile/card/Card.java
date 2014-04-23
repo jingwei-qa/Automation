@@ -13,7 +13,7 @@ public class Card {
 	// Those fields come from the ocr result.
 	
 	// how many fields are there in the ocr result.
-	int count;
+	public int count;
 	
 	// the values of the fields in the ocr result.
 	String[] values;

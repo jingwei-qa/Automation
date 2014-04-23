@@ -21,7 +21,7 @@ public class demo
 	 * There are 14 folders in /mnt/picset/ folder(//10.2.54.9/card_record), 
 	 * To avoid thread lock, better use thread less then 14. 
 	 * If need more, please use subfolder of the picset
-	 * TODO: not support multi-thread so far, but as told, ocr support multi-process invocation.
+	 * not support multi-thread so far, but as told, ocr support multi-process invocation.
 	 */
 	public static int threadCount = 1; 
 	
@@ -72,9 +72,11 @@ public class demo
 	 * @param filepath
 	 */
 	public static void Invoke(String filepath){
+		
+		RandomAccessFile fis = null;
 		try
 		{
-			RandomAccessFile fis = new RandomAccessFile(filepath,"r");
+			fis = new RandomAccessFile(filepath,"r");
 			System.out.println("len = " + fis.length());
 			byte [] cbuf = new byte [(int)fis.length()];
 			int clen = fis.read(cbuf);
@@ -82,7 +84,6 @@ public class demo
 			OCR ocr = new OCR();
 			if(ocr == null)
 				return;
-
 
 			if(!ocr.ocr_init("ocr_data/"))
 			{
@@ -113,13 +114,13 @@ public class demo
 			{
 				System.out.println("attr["+i+"] = "+ocr.attr[i]+"\t"+ocr.strs[i]);
 			}
-			
 			 
 			ocr.ocr_free();
 			fis.close();
 		}
-		catch(Exception e)
-		{e.printStackTrace();}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	

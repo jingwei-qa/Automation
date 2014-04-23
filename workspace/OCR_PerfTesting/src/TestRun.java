@@ -26,10 +26,12 @@ public class TestRun extends Thread{
 	int amount = 0;
 	
 	int size = -1;
+	double matchRate = 1.0;
+	
 	// sizep start from 1, since the do ... while will execute once before circle starts.
 	
 	public TestRun(String csvFile, String rootPath, String configFilePath, boolean strict, int fields) throws FileNotFoundException {
-		this(csvFile, rootPath, configFilePath, strict, fields, -1);
+		this(csvFile, rootPath, configFilePath, strict, fields, -1, 1.0);
 	}
 	
 	/**
@@ -43,7 +45,7 @@ public class TestRun extends Thread{
 	 * @throws Exception
 	 * 
 	 */
-	public TestRun(String csvFile, String rootPath, String configFilePath, boolean strict, int fields, int size) throws FileNotFoundException {
+	public TestRun(String csvFile, String rootPath, String configFilePath, boolean strict, int fields, int size, double matchRate) throws FileNotFoundException {
 		
 		File file = new File(rootPath);
 		if(!file.exists()){
@@ -56,10 +58,12 @@ public class TestRun extends Thread{
 		this.configFilePath = configFilePath;
 		this.strict = strict;
 		this.fields = fields;
-		
+		this.matchRate = matchRate;
 		// start the thread when initialized.
 //		start();
 	}
+	
+	Log issuePicLog = Log.GetInstance("issuePic.log");
 	
 	public void run(){
 		CardFactory cf = null;
@@ -93,29 +97,51 @@ public class TestRun extends Thread{
 					break;
 				}
 				
-				if(cb.getFolder() == null || cb.getImgname() == null){
+				if(cb.getFolder() == null || cb.getImgname() == null || cb.getImgname() == ""){
 					continue;
 				}
 				
 				if(cb.getFolder() != null & !cb.getFolder().isEmpty() & cb.getImgname()!=null & !cb.getImgname().isEmpty()){
 					String cardImgFilePath = this.rootPath + java.io.File.separator +  cb.getFolder() + java.io.File.separator + cb.getImgname();
+					
+					// if the file does not exists, ignore & continue
+					if( !(new File(cardImgFilePath).exists()) ){
+						continue;
+					}
+					
 					Card card = cf.Make(cardImgFilePath);
 					
-					int diffEach = CardBean.matchCard(cb, card, strict, fields);
+					// if card is nul, means the ocr load picture failed, continue.
+					if(card == null || card.count == 0){
+						// TODO, handle this
+						issuePicLog.Log(String.format("OCR read PIC failed: [%s]", cardImgFilePath));
+						continue;
+					}
+					
+					int diffEach = CardBean.matchCard(cb, card, strict, fields, matchRate);
+					
+					// If the matchCard return -1. 
+					// means the test data & ocr data met issues, ignore this record
+					if(diffEach == -1){
+						Log.Log(String.format("IGNORE! Fileds are empty!! [%s] -- [%s]", cb.getCard_id(), cardImgFilePath));
+						continue;
+					}
+					
 					diffs += diffEach;
 					
 					if(diffEach != 0){
-						Log.Log(String.format("Failed! Card [%s] does not match the OCR result of [%s]", cb.getCard_id(), cardImgFilePath));
+						Log.Log(String.format("FAILED! Field not match [%s] -- [%s]", cb.getCard_id(), cardImgFilePath));
 					}else{
-						Log.Log(String.format("successfully! Card [%s] match the OCR result of [%s] ", cb.getCard_id(), cardImgFilePath));
+						Log.Log(String.format("SUCCESS! BINGO [%s] -- [%s] ", cb.getCard_id(), cardImgFilePath));
 						bingo++;
 					}
+
+					amount++;
 				}
 				
 			} catch (IOException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}finally{
-				amount++;
 				Log.Log(String.format("[%d] Bingo / [%d] All ", bingo, amount));
 				
 				if(size > 0 && amount >= size){

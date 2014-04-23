@@ -13,6 +13,8 @@ import org.supercsv.io.CsvBeanReader;
 import org.supercsv.prefs.CsvPreference;
 
 import com.jingwei.mobile.log.Log;
+import com.jingwei.mobile.util.Compl2Simpl;
+import com.jingwei.mobile.util.Levenshtein;
 
 /**
  * 
@@ -255,7 +257,7 @@ public class CardBean extends Beans {
 	 * @throws NoSuchFieldException 
 	 * 
 	 */
-	public static int matchCard(CardBean cardBean, Card card, boolean strict, int cf) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
+	public static int matchCard(CardBean cardBean, Card card, boolean strict, int cf, double matchRate) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
 		// TODO: complete this method to give a result,
 		// TODO: Need to calculate the value according to the difference.
 		int diffs = 0;
@@ -270,9 +272,6 @@ public class CardBean extends Beans {
 				// Ignore those fields for now. 
 				if(ICardHeaders.HeaderFieldMapping.containsKey(p_csv))
 				{
-					
-					int count = 0;
-					boolean fieldMatched = false;
 					String fieldStr = CardFactory.header[i];
 					int fieldInOCR = ICardHeaders.HeaderFieldMapping.get(p_csv);
 					
@@ -280,44 +279,30 @@ public class CardBean extends Beans {
 					// record the count, and if any of the matched values equal to the expected value.
 					String expectedValue = String.valueOf(cardBean.getField(fieldStr));
 					String actualValue = null;
-					for(int k=0; k<card.attrs.length ; k++){
-						if(fieldInOCR == card.attrs[k]){
-							count++;
-						}else{
+					for(int k=0; k<card.count ; k++){
+						if(fieldInOCR != card.attrs[k]){
 							continue;
 						}
 						
-						actualValue = card.values[k].replace(" ", "");
+						actualValue = Compl2Simpl.Compl2Simpl(card.values[k].replace(" ", ""));
 						
-						if(expectedValue.equals(actualValue)){
-							fieldMatched = true;
+						if(expectedValue == null || expectedValue == ""){
+							return -1;
 						}
-						else{
-							// other steps will check the count & matched or not, so do nothing here.
+						
+						int distance = Levenshtein.Compare(expectedValue, actualValue);
+						
+						double matchPercentage = new Double(expectedValue.length() - distance) / expectedValue.length();
+						
+						// if the real matchPercentange less than the given value, match failed
+						if(matchPercentage < matchRate){
+							diffs = 1;
 						}
+						
+						break;
 					}
-					
-					// if strict is true, the card should only have one fields name header[i], or add the diffnumber.
-					if(strict & count < 1){
-						diffs++;
-						Log.Log(String.format("Field: %s, has 0 result in OCR result in STRICT mode.", fieldStr));
-					}
-					else if (strict & count > 1){
-						// if strict is true, and ocr result had multi value of the field. diffs++
-						diffs++;
-						Log.Log(String.format("Field: %s, has 1+ result in OCR result in STRICT mode.", fieldStr));
-					}
-					// if not matched, and the card has the value of the attribute (aka count > 0), diffs++;
-					if(!fieldMatched & count > 0){
-						// if matched, --
-						diffs++;
-						Log.Log(String.format("Field: %s - Expected: %s\t Actual: %s NOT MATCH.",fieldStr, expectedValue, actualValue));
-					}
-					
 				}
-				else{
-					// if not contain this field, TODO add a process to handle this.
-				}
+				
 			}
 		}
 		

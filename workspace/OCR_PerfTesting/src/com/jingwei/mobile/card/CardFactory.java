@@ -11,6 +11,14 @@ import com.jingwei.mobile.ocr.OCR;
 
 public class CardFactory implements java.io.Closeable {
 	
+	public static void main(String[] args) throws Exception{
+		String configFilePath = "ocr_data/";
+		String imageFilePath = "/mnt/picset/20140128/RspB_qid160851.jpg";
+		CardFactory cardFactory = CardFactory.InitCardFactory(configFilePath);
+		Card card = cardFactory.Make(imageFilePath);
+	}
+	
+	
 	/**
 	 * Use a dictionary to store the created factories, 
 	 * string is the path of the initialization folder, 
