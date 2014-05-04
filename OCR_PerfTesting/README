@@ -5,4 +5,10 @@ LastUpdate: 2014.4.16
 KNOW ISSUE:
 1. The card info given in the excel, is the simple Chinese format data. Some of the ocr image is a Comple Chinese format. No further process for this situation.
 
+TO RUNNING TEST:
+1. Open the samba share folder: smb://10.8.15.236/测试组专用/automation/OCR_PerfTesting/src/ocr_data/
+2. Copy the 'ocr_data/' folder to the 'OCR_PerfTesting/src/' folder 
+3. Copy the 'libocr.so' file to the 'OCR_PerfTesting/src/' folder
+4. Mount the picture share folder, it's on a Windows share folder: //10.2.54.9/card_record/ so far.
+5. Modify the ocr file path in com/jingwei/mobile/ocr/OCR.java, with your own absolute path.
 
