@@ -20,6 +20,10 @@ public abstract class MatchBase {
 	
 	public static double NAMEENMATCHRATE = 1.0;
 	
+	public static double EMAILMATCHRATE = 1.0;
+	
+	public static double FAXMATCHRATE = 1.0;
+	
 	public static void main(String[] args){
 		String exp = "abcd";
 		

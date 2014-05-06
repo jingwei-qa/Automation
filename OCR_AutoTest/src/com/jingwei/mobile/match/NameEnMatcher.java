@@ -18,7 +18,7 @@ public class NameEnMatcher extends MatchBase {
 		
 		String name = cardBean.getName_en();
 
-		if(name == null || name == ""){
+		if(name == null || name == "" || name.toLowerCase() == "null"){
 			return result;
 		}
 		
