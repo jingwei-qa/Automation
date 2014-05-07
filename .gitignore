@@ -9,3 +9,4 @@ OCR_PerfTesting/src/ocr_data/
 *.png
 OCR_PerfTesting/bin/
 *.log
+*.txt
