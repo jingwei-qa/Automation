@@ -94,6 +94,11 @@ public class CardFactory implements java.io.Closeable {
 	 */
 	public Card Make(String imageFilePath) throws IOException{
 		
+		File imgFile = new File(imageFilePath);
+		if(!imgFile.exists()){
+			return null;
+		}
+		
 		Boolean iswebp = true;
 		String upperPath = imageFilePath.toUpperCase();
 		if(upperPath.endsWith(".JPG") || upperPath.endsWith(".JPEG")){
@@ -108,7 +113,8 @@ public class CardFactory implements java.io.Closeable {
 		int clen = fis.read(cbuf);
 		
 //		Log.Log("rlen = " + clen);
-		Boolean loadSuccess = false;
+//		int loadSuccess = -1;
+		boolean loadSuccess = false;
 		if(iswebp){
 			loadSuccess = ocr.ocr_readWebpBuffer(clen, cbuf);
 		}

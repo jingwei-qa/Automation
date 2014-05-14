@@ -2,33 +2,49 @@ package com.jingwei.mobile.result;
 
 public class MobileResult extends ResultBase {
 	
-	public int mobileBingo = 0;
-	public int mobileCount = 0;
+	public int onceBingo = 0;
+	public int cardCount = 0;
 	
-	public int mobileDistance = 0;
-	public int mobileLength = 0;
-	
-	public int filedMismatchCount = 0;
-
 	@Override
 	public MobileResult Add(ResultBase rb) {
+		if(rb == null){
+			return this;
+		}
 
-		if(rb.getClass() != this.getClass()){
+		if(!(rb instanceof MobileResult)){
 			return this;
 		}
 		
-		MobileResult result = new MobileResult();
-		MobileResult target = (MobileResult)rb;
+		this.Bingo += rb.Bingo;
+		this.Count += rb.Count;
 		
-		result.mobileBingo = this.mobileBingo + target.mobileBingo;
-		result.mobileCount = this.mobileCount + target.mobileCount;
+		this.Distance += rb.Distance;
+		this.Length += rb.Length;
 		
-		result.mobileDistance = this.mobileDistance + target.mobileDistance;
-		result.mobileLength = this.mobileLength + target.mobileLength;
+		this.filedMismatchCount += rb.filedMismatchCount;
 		
-		result.filedMismatchCount = this.filedMismatchCount + target.filedMismatchCount;
+		this.onceBingo += ((MobileResult)rb).onceBingo;
+		this.cardCount += ((MobileResult)rb).cardCount;
 		
-		return result;
+		return this;
+	}
+	
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(System.lineSeparator());
+		sb.append(String.format("[%s]", this.getClass()));
+		sb.append(System.lineSeparator());
+		sb.append(String.format("[Bingo: %d] / [Count: %d] -- %f", Bingo, Count, new Double(Bingo) / Count));
+		sb.append(System.lineSeparator());
+		sb.append(String.format("[Distance: %d] / [Length: %d]", Distance, Length));
+		sb.append(System.lineSeparator());
+		sb.append(String.format("[BingoOnce: %d] / [CardCount: %d]", onceBingo, cardCount));
+		sb.append(System.lineSeparator());
+		sb.append(String.format("[FiledMismatchCount: %d]", filedMismatchCount));
+		sb.append(System.lineSeparator());
+		
+		return sb.toString();
 	}
 
 }

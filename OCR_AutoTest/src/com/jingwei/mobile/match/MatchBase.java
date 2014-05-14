@@ -1,5 +1,6 @@
 package com.jingwei.mobile.match;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,9 @@ public abstract class MatchBase {
 	
 	public static double FAXMATCHRATE = 1.0;
 	
+	public static String EMAILSPLITOR = "@@@";
+	public static String WEBSITESPLITOR = "@@@";
+	
 	public static void main(String[] args){
 		String exp = "abcd";
 		
@@ -41,7 +45,7 @@ public abstract class MatchBase {
 		System.out.println(mostLike);
 	}
 	
-	public abstract ResultBase Match(CardBean cardBean, Card card);
+	public abstract ResultBase Match(CardBean cardBean, Card card) throws IOException;
 	
 	public String getMostLikeStr(String expected, List<String> actuals){
 		
@@ -54,7 +58,7 @@ public abstract class MatchBase {
 		}
 		
 		int distance = expected.length();
-		String result = "";
+		String result = actuals.get(0);
 		for(String s : actuals){
 			int tmp = Levenshtein.Compare(expected, s);
 			if( tmp < distance){

@@ -1,32 +1,27 @@
 package com.jingwei.mobile.result;
 
 public class NameEnResult extends ResultBase {
-	public int Bingo = 0;
-	public int Count = 0;
-	
-	public int Distance = 0;
-	public int Length = 0;
-	
-	public int filedMismatchCount = 0;
 
 	@Override
 	public NameEnResult Add(ResultBase rb) {
-		if(rb.getClass() != this.getClass()){
+		if(rb == null){
+			return this;
+		}
+
+		if(!(rb instanceof NameEnResult)){
 			return this;
 		}
 		
-		NameEnResult result = new NameEnResult();
-		NameEnResult target = (NameEnResult)rb;
+		this.Bingo += rb.Bingo;
+		this.Count += rb.Count;
 		
-		result.Bingo = this.Bingo + target.Bingo;
-		result.Count = this.Count + target.Count;
+		this.Distance += rb.Distance;
+		this.Length += rb.Length;
 		
-		result.Distance = this.Distance + target.Distance;
-		result.Length = this.Length + target.Length;
+		this.filedMismatchCount += rb.filedMismatchCount;
 		
-		result.filedMismatchCount = this.filedMismatchCount + target.filedMismatchCount;
 		
-		return result;
+		return this;
 	}
 
 }

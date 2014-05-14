@@ -40,13 +40,16 @@ public class TelephoneMatcher extends MatchBase {
 		ArrayList<String> phoneList = new ArrayList<String>();
 		for(Object jo : ja){
 			if(jo.getClass() == JSONObject.class){
-				String expected = ((JSONObject)jo).getString("v");
-				
-				/**
-				 * For phone field, only count the phone number not start with +861
-				 */
-				if(!expected.startsWith("+861") && expected.length() > 0){
-					phoneList.add(expected);
+				JSONObject jsonObj = (JSONObject)jo;
+				if(jsonObj.containsKey("v")){
+					String expected = jsonObj.getString("v");
+					
+					/**
+					 * For phone field, only count the phone number not start with +861
+					 */
+					if(!expected.startsWith("+861") && expected.length() > 0){
+						phoneList.add(expected);
+					}
 				}
 			}
 		}
@@ -94,6 +97,10 @@ public class TelephoneMatcher extends MatchBase {
 			 */
 			if(expected.startsWith("+86") && !actual.startsWith("+86")){
 				expected = expected.substring(3);
+			}
+			
+			if(actual.startsWith("+86") && !expected.startsWith("+86")){
+				actual = actual.substring(3);
 			}
 			
 			int distance = Levenshtein.Compare(expected, actual);

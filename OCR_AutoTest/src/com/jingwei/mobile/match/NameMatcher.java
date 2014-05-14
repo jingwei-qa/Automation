@@ -1,6 +1,7 @@
 package com.jingwei.mobile.match;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.jingwei.mobile.card.Card;
 import com.jingwei.mobile.card.CardBean;
@@ -34,7 +35,8 @@ public class NameMatcher extends MatchBase {
 		String expected = name;
 		expected = Utility.TrimNConvert(expected);
 		
-		String actual = this.getMostLikeStr(expected, card.getValuesList());
+		List<String> processedActualValueList = Utility.TrimNConvert(card.getValuesList());
+		String actual = this.getMostLikeStr(expected, processedActualValueList);
 		
 		int distance = Levenshtein.Compare(expected, actual);
 		if(distance == expected.length()){
@@ -43,7 +45,7 @@ public class NameMatcher extends MatchBase {
 		}else{
 			// ELSE means found a similar one in ocr result
 			// To see if the attribute is right:
-			int indexOfActual = card.getValuesList().indexOf(actual);
+			int indexOfActual = processedActualValueList.indexOf(actual);
 			int attribOfActual = card.getAttribList().get(indexOfActual);
 			if(attribOfActual != ICardHeaders.NAMECARD_NAME_CN){
 				result.filedMismatchCount++;

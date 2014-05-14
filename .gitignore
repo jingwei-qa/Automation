@@ -10,3 +10,6 @@ OCR_PerfTesting/src/ocr_data/
 OCR_PerfTesting/bin/
 *.log
 *.txt
+*.xml
+OCR_AutoTest/src/ocr_data/
+OCR_AutoTest/bin/

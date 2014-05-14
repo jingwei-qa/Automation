@@ -1,14 +1,22 @@
 package com.jingwei.mobile.ocr;
 import java.lang.Runtime;
 
+//Return Status 
+// -1. error
+//	0. not accrate 
+// 	1. accrate 
+// 	2. has problem
+//#define OCR_ERROR -1
+//#define OCR_NOT_ACCURATE 0
+//#define OCR_ACCURATE 1
+//#define OCR_HAS_PROBLEM 2
+
 public class OCR{
 
 	static{
-//		Runtime.getRuntime().load("/home/administrator/workspace/OCR_PerfTesting/bin/libocr-0.1.so");
-
-		Runtime.getRuntime().load("/media/boedriver/automation_workspace/OCR_PerfTesting/libocr.so");
-
-//		System.loadLibrary("ocr");
+		// absolute file path
+		//Runtime.getRuntime().load("/libocr.so");
+		System.loadLibrary("ocr");
 	}
 
 	public OCR()
@@ -17,7 +25,6 @@ public class OCR{
 		strs = new String[128];
 		attr = new int[128];
 	}
-
 	
 	public native boolean ocr_init(String pathname);
 

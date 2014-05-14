@@ -1,5 +1,6 @@
 package com.jingwei.mobile.test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,23 @@ public class Test {
 		matchers.put(new Integer(ICardFields.IM), new IMMatcher());
 		matchers.put(new Integer(ICardFields.WEBSITE), new WebsiteMatcher());
 	}
+	
+	public static Test GetEmptyTest(){
+		Test emptyTest = new Test();
+		emptyTest.results.add(new AddressResult());
+		emptyTest.results.add(new CompanyResult());
+		emptyTest.results.add(new EmailResult());
+		emptyTest.results.add(new FaxResult());
+		emptyTest.results.add(new IMResult());
+		emptyTest.results.add(new MobileResult());
+		emptyTest.results.add(new NameEnResult());
+		emptyTest.results.add(new NameResult());
+		emptyTest.results.add(new TelephoneResult());
+		emptyTest.results.add(new TitleResult());
+		emptyTest.results.add(new WebsiteResult());
+		
+		return emptyTest;
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -49,6 +67,10 @@ public class Test {
 	
 	ArrayList<ResultBase> results = new ArrayList<ResultBase>();
 	
+	private Test(){
+		
+	}
+	
 	public Test(CardBean cardBean, Card card){
 		this.bean = cardBean;
 		this.card = card;
@@ -56,8 +78,9 @@ public class Test {
 
 	/**
 	 * Do match to all the fields by default.
+	 * @throws IOException 
 	 */
-	public void doMatch(){
+	public void doMatch() throws IOException{
 		
 		results = null;
 		results = new ArrayList<ResultBase>();
@@ -71,8 +94,9 @@ public class Test {
 	/**
 	 * Only do match to the spicified fields
 	 * @param fields, the fields need to do matching
+	 * @throws IOException 
 	 */
-	public void doMatch(int fields){
+	public void doMatch(int fields) throws IOException{
 		results = null;
 		results = new ArrayList<ResultBase>();
 		
@@ -82,6 +106,20 @@ public class Test {
 				results.add(result);
 			}
 		}
+	}
+	
+	public void add(Test t){
+		
+		for(ResultBase re : this.results){
+			for(ResultBase rt: t.results){
+				re.Add(rt);
+			}
+		}
+			
+	}
+	
+	public void printResult(){
+		
 	}
 	
 }

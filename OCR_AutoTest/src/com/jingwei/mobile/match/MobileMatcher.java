@@ -1,6 +1,7 @@
 package com.jingwei.mobile.match;
 
 import java.util.ArrayList;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -15,6 +16,7 @@ import com.jingwei.mobile.util.Utility;
 
 public class MobileMatcher extends MatchBase {
 
+	
 	/**
 	 * Comparing the mobile field from csv record to OCR result.
 	 * --------------------------------------------------------
@@ -49,13 +51,16 @@ public class MobileMatcher extends MatchBase {
 		
 		for(Object jo : ja){
 			if(jo.getClass() == JSONObject.class){
-				String expected = ((JSONObject)jo).getString("v");
-				
-				/**
-				 * For phone field, only count the phone number not start with +861
-				 */
-				if(!expected.startsWith("+861") && expected.length() > 0){
-					mobileList.add(expected);
+				JSONObject jsonObj = (JSONObject)jo;
+				if(jsonObj.containsKey("v")){
+					String expected = jsonObj.getString("v");
+					
+					/**
+					 * For phone field, only count the phone number not start with +861
+					 */
+					if(expected.startsWith("+861") && expected.length() > 0){
+						mobileList.add(expected);
+					}
 				}
 			}
 		}
@@ -73,7 +78,7 @@ public class MobileMatcher extends MatchBase {
 				/**
 				 * For phone field, only count the phone number not start with +861
 				 */
-				if(!expected.startsWith("+861") && expected.length() > 0){
+				if(expected.startsWith("+861") && expected.length() > 0){
 					mobileList.add(expected);
 				}
 			}
@@ -83,13 +88,16 @@ public class MobileMatcher extends MatchBase {
 		 * Start matching, recursively compare all the fields in ocr result.
 		 * Find if there is any wrong field mapping 
 		 */
-		result.mobileCount = mobileList.size();
+		result.Count = mobileList.size();
+//		Utility.PrintArray(mobileList);
 		
 		for(int i = 0; i < mobileList.size(); i++){
 			String expected = mobileList.get(i);
 			expected = Utility.TrimNConvert(expected);
 			
 			String actual = this.getMostLikeStr(expected, card.getValuesList());
+//			System.out.println("Seeking : " + actual);
+			 
 			int indexOfActual = card.getValuesList().indexOf(actual);
 			int attribOfActual = card.getAttribList().get(indexOfActual);
 			
@@ -105,14 +113,16 @@ public class MobileMatcher extends MatchBase {
 			}
 			
 			int distance = Levenshtein.Compare(expected, actual);
-			result.mobileDistance += distance;
-			result.mobileLength += expected.length();
+			result.Distance += distance;
+			result.Length += expected.length();
 			
 			if(distance == 0){
-				result.mobileBingo ++;
+				result.Bingo ++;
 			}
 		}
 		
+		result.onceBingo = result.Bingo > 0 ? 1 : 0;
+		result.cardCount = 1;
 		return result;
 	}
 }

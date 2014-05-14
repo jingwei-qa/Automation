@@ -1,32 +1,28 @@
 package com.jingwei.mobile.result;
 
 public class FaxResult extends ResultBase {
-	public int Bingo = 0;
-	public int Count = 0;
-	
-	public int Distance = 0;
-	public int Length = 0;
-	
-	public int filedMismatchCount = 0;
 	
 	@Override
 	public FaxResult Add(ResultBase rb) {
-		if(rb.getClass() != this.getClass()){
+		if(rb == null){
 			return this;
 		}
 		
-		FaxResult result = new FaxResult();
-		FaxResult target = (FaxResult)rb;
+
+		if(!(rb instanceof FaxResult)){
+			return this;
+		}
 		
-		result.Bingo = this.Bingo + target.Bingo;
-		result.Count = this.Count + target.Count;
+		this.Bingo += rb.Bingo;
+		this.Count += rb.Count;
 		
-		result.Distance = this.Distance + target.Distance;
-		result.Length = this.Length + target.Length;
+		this.Distance += rb.Distance;
+		this.Length += rb.Length;
 		
-		result.filedMismatchCount = this.filedMismatchCount + target.filedMismatchCount;
+		this.filedMismatchCount += rb.filedMismatchCount;
 		
-		return result;
+		
+		return this;
 	}
 
 }

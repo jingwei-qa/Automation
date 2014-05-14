@@ -1,6 +1,7 @@
 package com.jingwei.mobile.match;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
@@ -44,6 +45,7 @@ public class TitleMatcher extends MatchBase {
 //		}
 		
 		for(String s : titles.split("@@@")){
+			s = Utility.TrimNConvert(s);
 			if(s != null && s != "" && s.toLowerCase() != "null"){
 				titleList.add(s);
 			}
@@ -58,9 +60,9 @@ public class TitleMatcher extends MatchBase {
 		
 		for(int i = 0; i < titleList.size(); i++){
 			String expected = titleList.get(i);
-			expected = Utility.TrimNConvert(expected);
 			
-			String actual = this.getMostLikeStr(expected, card.getValuesList());
+			List<String> processedActualValueList = Utility.TrimNConvert(card.getValuesList());
+			String actual = this.getMostLikeStr(expected, processedActualValueList);
 			
 			int distance = Levenshtein.Compare(expected, actual);
 			if(distance == expected.length()){
@@ -69,7 +71,7 @@ public class TitleMatcher extends MatchBase {
 			}else{
 				// ELSE means found a similar one in ocr result
 				// To see if the attribute is right:
-				int indexOfActual = card.getValuesList().indexOf(actual);
+				int indexOfActual = processedActualValueList.indexOf(actual);
 				int attribOfActual = card.getAttribList().get(indexOfActual);
 				if(attribOfActual != ICardHeaders.NAMECARD_TITLE){
 					result.filedMismatchCount++;
@@ -80,7 +82,7 @@ public class TitleMatcher extends MatchBase {
 				result.Length += expected.length();
 				
 				int len = expected.length();
-				if( (len - distance) / len >= TITLEMATCHRATE){
+				if(len != 0 && (len - distance) / len >= TITLEMATCHRATE){
 					result.Bingo++;
 				}
 			}

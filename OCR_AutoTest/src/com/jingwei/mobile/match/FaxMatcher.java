@@ -1,6 +1,7 @@
 package com.jingwei.mobile.match;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
@@ -54,8 +55,10 @@ public class FaxMatcher extends MatchBase {
 		for(int i = 0; i < faxList.size(); i++){
 			String expected = faxList.get(i);
 			
-			String actual = this.getMostLikeStr(expected, card.getValuesList());
-			int indexOfActual = card.getValuesList().indexOf(actual);
+			List<String> processedActualValueList = Utility.TrimNConvert(card.getValuesList());
+			String actual = this.getMostLikeStr(expected, processedActualValueList);
+			
+			int indexOfActual = processedActualValueList.indexOf(actual);
 			int attribOfActual = card.getAttribList().get(indexOfActual);
 			
 			if(attribOfActual != ICardHeaders.NAMECARD_FAX){
