@@ -91,7 +91,7 @@ public class TestRunMobileNPhone extends TestRun{
 				}
 				
 				if(cb.getFolder() != null & !cb.getFolder().isEmpty() & cb.getImgname()!=null & !cb.getImgname().isEmpty()){
-					String cardImgFilePath = this.rootPath + java.io.File.separator +  cb.getFolder() + java.io.File.separator + cb.getImgname();
+					String cardImgFilePath = this.rootPath + java.io.File.separator +  java.io.File.separator + cb.getImgname();
 					
 					// if the file does not exists, ignore & continue
 					if( !(new File(cardImgFilePath).exists()) ){

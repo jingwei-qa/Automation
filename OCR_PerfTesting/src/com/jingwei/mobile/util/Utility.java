@@ -1,5 +1,9 @@
 package com.jingwei.mobile.util;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Utility {
 
 	/**
@@ -45,6 +49,23 @@ public class Utility {
 		
 		if(s.length() == 0){
 			return true;
+		}
+		
+		return res;
+	}
+	
+	public static List<File> GetAllFiles(String path){
+		ArrayList<File> res = new ArrayList<File>();
+
+		File rootFolder = new File(path);
+		if(rootFolder.exists()){
+			if(rootFolder.isFile()){
+				res.add(rootFolder);
+			}else{
+				for(String sub : rootFolder.list()){
+					res.addAll(GetAllFiles(sub));
+				}
+			}
 		}
 		
 		return res;

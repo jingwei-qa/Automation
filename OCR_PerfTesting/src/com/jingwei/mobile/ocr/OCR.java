@@ -6,7 +6,7 @@ public class OCR{
 	static{
 //		Runtime.getRuntime().load("/home/administrator/workspace/OCR_PerfTesting/bin/libocr-0.1.so");
 
-		Runtime.getRuntime().load("/media/boedriver/automation_workspace/OCR_PerfTesting/libocr.so");
+		Runtime.getRuntime().load("/media/boedriver/automation_workspace/Automation/OCR_PerfTesting/libocr.so");
 
 //		System.loadLibrary("ocr");
 	}

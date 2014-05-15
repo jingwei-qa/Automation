@@ -1,4 +1,5 @@
 import com.jingwei.mobile.card.*;
+import com.jingwei.mobile.testrun.TestRun;
 import com.jingwei.mobile.testrun.TestRunMobileNPhone;
 
 public class POC {
@@ -6,12 +7,12 @@ public class POC {
 	public static void main(String[] args) throws Exception{
 		
 		String csvFile = "card_tb.csv";
-		String rootPath = "/mnt/picset";
+		String rootPath = "/media/boedriver/picset1000_2";
 		String configFilePath = "ocr_data/";
 		double matchRate = 1.0;
-		int fields = ICardFields.PHONE_FAX;
-		int amount = 1000;
-		int startPos = 20000;
+		int fields = ICardFields.NAME;
+		int amount = 1200;
+		int startPos = 0;
 
 		//int fields = ICardFields.NAME | ICardFields.MOBILE; // can add more | to match more fields
 

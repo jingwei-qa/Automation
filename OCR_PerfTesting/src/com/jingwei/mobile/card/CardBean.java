@@ -213,6 +213,7 @@ public class CardBean extends Beans {
 	}
 
 	public String getFolder() {
+//		return "";
 		return folder;
 	}
 
