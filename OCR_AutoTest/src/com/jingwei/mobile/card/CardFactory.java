@@ -114,7 +114,7 @@ public class CardFactory implements java.io.Closeable {
 		
 //		Log.Log("rlen = " + clen);
 //		int loadSuccess = -1;
-		boolean loadSuccess = false;
+		int loadSuccess = -1;
 		if(iswebp){
 			loadSuccess = ocr.ocr_readWebpBuffer(clen, cbuf);
 		}
@@ -122,7 +122,7 @@ public class CardFactory implements java.io.Closeable {
 			loadSuccess = ocr.ocr_readJpgBuffer(clen, cbuf);
 		}
 
-		if(loadSuccess)
+		if(loadSuccess>= 0)
 		{
 			return new Card(ocr.num, ocr.strs, ocr.attr);
 		}

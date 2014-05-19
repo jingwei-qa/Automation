@@ -10,7 +10,7 @@ public class TestRun {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 
-		String picsetPath = "/mnt/picset/picset2000"; 
+		String picsetPath = "/mnt/samba/测试组专用/automation/picset2000"; 
 		String initPath = "ocr_data/";
 		String csvFilePath = "card_tb.csv";
 		int startPos = 20000;

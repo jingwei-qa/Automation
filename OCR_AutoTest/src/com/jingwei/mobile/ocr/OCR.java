@@ -28,11 +28,11 @@ public class OCR{
 	
 	public native boolean ocr_init(String pathname);
 
-	public native boolean ocr_read(String filename);
+	public native int ocr_read(String filename);
 
-	public native boolean ocr_readJpgBuffer(int length, byte[] buffer);
+	public native int ocr_readJpgBuffer(int length, byte[] buffer);
 
-	public native boolean ocr_readWebpBuffer(int length, byte[] buffer);
+	public native int ocr_readWebpBuffer(int length, byte[] buffer);
 	
 	public native void ocr_free();
 

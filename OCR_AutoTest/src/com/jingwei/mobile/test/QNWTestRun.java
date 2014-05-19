@@ -31,33 +31,37 @@ public class QNWTestRun {
 	public static String ENCODING = "Unicode";
 	public static String[] phonePrefix = {"+86", "+852", "+1"};
 	public static String[] websitePrefix = {"http://", "https://"};
+	public static String QNWResRoot = "/mnt/samba/测试组专用/automation/qnw_auto_res/data/7";
+	public static int Index = 20000;
 	
 	public static void main(String[] args) throws IOException{
 		
-		int count = 500;
+		int count = 3500;
 		String csvFile = "utf8.csv";
-		String nameFile = "name.txt";
-		String enNameFile = "9.txt";
-		String phoneFile = "phone.txt";
-		String titleFile = "title.txt";
-		String emailFile = "5.txt";
-		String imFile = "im.txt";
-		String websiteFile = "7.txt";
-		String filenameFile = "result1.log";
-		String addressFile = "address.txt";
+		String nameFile = QNWResRoot + java.io.File.separatorChar + "1-name.txt";
+//		String enNameFile = QNWResRoot + java.io.File.separatorChar + "9.txt";
+		String phoneFile = QNWResRoot + java.io.File.separatorChar + "2-phone.txt";
+		String addressFile = QNWResRoot + java.io.File.separatorChar + "3-adress.txt";
+		String titleFile = QNWResRoot + java.io.File.separatorChar + "4-title.txt";
+		String emailFile = QNWResRoot + java.io.File.separatorChar + "5-mail.txt";
+		String websiteFile = QNWResRoot + java.io.File.separatorChar + "7-website.txt";
+
+		String filenameFile = QNWResRoot + java.io.File.separatorChar + "info.log";
+
+		String imFile = QNWResRoot + java.io.File.separatorChar + "im.txt";
 		
 		int matchedCount = 0;
 		int totalCount = 0;
 		
 		
-//		CompareName(count, csvFile, nameFile, filenameFile, matchedCount,
-//				totalCount);
+		CompareName(count, csvFile, nameFile, filenameFile, matchedCount,
+				totalCount);
 		
 		ComparePhone(count, csvFile, phoneFile, filenameFile, matchedCount,
 				totalCount);
 		
-//		CompareEmail(count, csvFile, emailFile, filenameFile, matchedCount,
-//				totalCount);
+		CompareEmail(count, csvFile, emailFile, filenameFile, matchedCount,
+				totalCount);
 		
 //		CompareWebsite(count, csvFile, websiteFile, filenameFile, matchedCount,
 //				totalCount);
@@ -199,11 +203,11 @@ public class QNWTestRun {
 			if(actualPhones == null || actualPhones.length == 0){
 				tmpMatchCount += 0;
 			}else{
-				System.out.println(String.format("Comparing: [%s] :: [%s]", cb.getName(), cb.getImgname()));
+//				System.out.println(String.format("Comparing: [%s] :: [%s]", cb.getName(), cb.getImgname()));
 				
 				for(String act : actualPhones){
 					for(String exp : expectedPhones){
-						System.out.println(String.format("Matching: [%s] -> [%s]", exp, act));
+//						System.out.println(String.format("Matching: [%s] -> [%s]", exp, act));
 						for(String s : QNWTestRun.phonePrefix){
 							if(exp.startsWith(s) && !act.startsWith(s)){
 								exp = exp.replace(s, "");
@@ -225,14 +229,14 @@ public class QNWTestRun {
 				bingoNum++;
 			}
 			
-			System.out.println(String.format("Single Match: [%d] / [%d]", tmpMatchCount,  expectedPhones.size()));
+//			System.out.println(String.format("Single Match: [%d] / [%d]", tmpMatchCount,  expectedPhones.size()));
 			matchedCount += tmpMatchCount;
 			totalCount += expectedPhones.size();
 			
 		}
 		
-		System.out.println(String.format("Matched / Total : [%d] / [%d]", matchedCount, totalCount));
-		System.out.println(String.format("Bingo / Count : [%d] / [%d]", bingoNum, totalNum));
+		System.out.println(String.format("Phone Matched / Total : [%d] / [%d]", matchedCount, totalCount));
+		System.out.println(String.format("Phone Bingo / Count : [%d] / [%d]", bingoNum, totalNum));
 	}
 
 	private static void CompareIM(int count, String csvFile, String idImFile,
@@ -303,13 +307,26 @@ public class QNWTestRun {
 			String actualName = idNameMapping.get(id);
 			
 			System.out.println("BeanName: " + cb.getName());
+			System.out.println("BeanenName: " + cb.getName_en());
 			System.out.println("actualName: " + actualName);
 			
-			if(cb.getName() == null || cb.getName() == "" || cb.getName().toLowerCase() == "null"){
+			String expName = cb.getName();
+			if( expName == null || expName == "" || expName.toLowerCase() == "null"){
+				expName = cb.getName_en();
+			}
+			
+			if( expName == null || expName == "" || expName.toLowerCase() == "null"){
 				continue;
 			}
 			
-			if(cb.getName().equals(actualName)){
+			expName = Utility.TrimNConvert(expName);
+			
+			if( actualName == null || actualName == "" || actualName.toLowerCase() == "null"){
+				continue;
+			}
+			
+			actualName = Utility.TrimNConvert(actualName);
+			if(expName.equals(actualName)){
 				matchedCount++;
 			}
 			
@@ -317,7 +334,7 @@ public class QNWTestRun {
 			
 		}
 		
-		System.out.println(String.format("Matched / Total : [%d] / [%d]", matchedCount, totalCount));
+		System.out.println(String.format("Name field: Matched / Total : [%d] / [%d]", matchedCount, totalCount));
 	}
 
 	private static void CompareEnName(int count, String csvFile, String enNameFile,
@@ -385,12 +402,12 @@ public class QNWTestRun {
 			if(actualEmails == null || actualEmails.length == 0){
 				tmpMatchCount += 0;
 			}else{
-				System.out.println(String.format("Comparing: [%s] :: [%s]", cb.getName(), cb.getImgname()));
+//				System.out.println(String.format("Comparing: [%s] :: [%s]", cb.getName(), cb.getImgname()));
 				
 				for(String act : actualEmails){
 					for(String s : expectedEmails){
 						
-						System.out.println(String.format("Matching: [%s] -> [%s]", s, act));
+//						System.out.println(String.format("Matching: [%s] -> [%s]", s, act));
 						act=Utility.TrimNConvert(act);
 						String exp = Utility.TrimNConvert(s);
 						
@@ -400,7 +417,7 @@ public class QNWTestRun {
 					}
 				}
 				
-				System.out.println(String.format("Matched / Total: [%d] / [%d]", tmpMatchCount, expectedEmails.length));
+//				System.out.println(String.format("Matched / Total: [%d] / [%d]", tmpMatchCount, expectedEmails.length));
 				
 			}
 			
@@ -409,7 +426,7 @@ public class QNWTestRun {
 			
 		}
 		
-		System.out.println(String.format("Matched / Total : [%d] / [%d]", matchedCount, totalCount));
+		System.out.println(String.format("Mail Matched / Total : [%d] / [%d]", matchedCount, totalCount));
 	}
 
 	private static void CompareWebsite(int count, String csvFile, String websiteFile,
@@ -476,11 +493,14 @@ public class QNWTestRun {
 	}
 	
 	public Map<String, CardBean> GetFileBeanMapping(String csvFile, int count) throws IOException{
-		Map<String, CardBean> fileIdMap = new HashMap<String, CardBean>();
+		Map<String, CardBean> fileBeanMap = new HashMap<String, CardBean>();
 		CsvBeanReader reader =CardBean.InitReader(csvFile, "UTF-8", CsvPreference.EXCEL_PREFERENCE);
-		
 		CardBean cb = new CardBean();
-		while(count > 0){
+		while(reader.getLineNumber() < Index ){
+			reader.read(cb.getClass(), CardBean.header);
+
+		}
+		while(count-- > 0){
 			try {
 				cb = reader.read(cb.getClass(), CardBean.header);
 
@@ -488,17 +508,20 @@ public class QNWTestRun {
 				if(cb == null){
 					break;
 				}else{
-					fileIdMap.put(cb.getImgname(), cb);
+					if(cb.getImgname() != null && cb.getImgname() != ""){
+						fileBeanMap.put(cb.getImgname(), cb);
+						
+					}
 				}
 				
 			} catch (IOException e) {
 				e.printStackTrace();
 				reader.close();
-				return fileIdMap;
+				return fileBeanMap;
 			}
 		}
 		
-		return fileIdMap;
+		return fileBeanMap;
 	}
 
 	/**
@@ -516,7 +539,7 @@ public class QNWTestRun {
 		
 		HashMap<String, String> fileIdMapping = new HashMap<String, String>();
 		
-		InputStreamReader isReader = new InputStreamReader(new FileInputStream(file));
+		InputStreamReader isReader = new InputStreamReader(new FileInputStream(file), ENCODING);
 		BufferedReader br = new BufferedReader(isReader);
 		try{
 			// first line is the db table title, useless, skip
@@ -530,13 +553,18 @@ public class QNWTestRun {
 				
 				// here is the content 
 				line = br.readLine();
-				if(line == null){
+				if(line == null || line == "" ){
 					break;
 				}
 				// trim to ignore the whitespaces
 				line = line.trim();
-				fileIdMapping.put(line + ".jpg", String.valueOf(index));
-				index++;
+				
+				if(line != null && line != "" )
+				{
+					line = line + ".jpg";
+					fileIdMapping.put(line, String.valueOf(index));
+					index++;
+				}
 			}
 			
 		}catch(IOException e){
